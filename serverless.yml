@@ -1,0 +1,16 @@
+service: notify
+
+# Ensure that Serverless Framework is packaging our functions individually for optimized performance
+package:
+    individually: true
+
+plugins:
+    - serverless-bundle # Package our functions with Webpack
+    - serverless-offline
+    - serverless-dotenv-plugin # Load .env as environment variables
+
+provider:
+    name: aws
+    runtime: nodejs12.x
+    stage: prod
+    region: us-east-1
