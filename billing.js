@@ -7,6 +7,7 @@ export const main = handler(async (event, context) => {
     const {storage, source} = JSON.parse(event.body);
     const amount = calculateCost(storage);
     const stripe = stripePackage(process.env.stripeSecretKey);
+    const description = "Scratch charge";
 
     await stripe.charges.create({
         source,
@@ -16,4 +17,4 @@ export const main = handler(async (event, context) => {
     });
 
     return { status: true };
-})
+});
