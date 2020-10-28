@@ -5,12 +5,100 @@ package:
     individually: true
 
 plugins:
-    - serverless-bundle # Package our functions with Webpack
+    # Package our functions with Webpack
+    - serverless-bundle
     - serverless-offline
-    - serverless-dotenv-plugin # Load .env as environment variables
+    # Load .env as environment variables
+    - serverless-dotenv-plugin
 
 provider:
     name: aws
     runtime: nodejs12.x
     stage: prod
     region: us-east-1
+
+    # These environment variables are made available to our functions
+    # under process.env.
+    environment:
+        tableName: notes
+        stripeSecretKey: ${env:STRIPE_SECRET_KEY}
+
+    # 'iamRoleStatements' defines the permission policy for the Lambda function.
+    # In this case Lambda functions are granted with permissions to access DynamoDB.
+    iamRoleStatements:
+        - Effect: Allow
+          Action:
+              - dynamodb:Scan
+              - dynamodb:Query
+              - dynamodb:GetItem
+              - dynamodb:PutItem
+              - dynamodb:UpdateItem
+              - dynamodb:DeleteItem
+              - dynamodb:DescribeTable
+          Resource: 'arn:aws:dynamodb:us-east-1:*:*'
+
+functions:
+    # Defines an HTTP API endpoint that calls the main function in create.js
+    create:
+        handler: create.main
+        events:
+            - http:
+                  # - path: url path is /notes
+                  path: notes
+                  # - method: POST request
+                  method: post
+                  # - cors: enabled CORS (Cross-Origin Resource Sharing) for browser cross
+                  # - domain api call
+                  cors: true
+                  # - authorizer: authenticate using the AWS IAM role
+                  authorizer: aws_iam
+    # Defined an HTTP API endpoint that calls the main function in get.js
+    get:
+        handler: get.main
+        events:
+            - http:
+                # path: url path is /notes/{id}
+                path: notes/{id}
+                method: get
+                cors: true
+                authorizer: aws_iam
+    # Defined an HTTP API endpoint that calls the main function in list.js
+    list:
+        handler: list.main
+        events:
+            - http:
+                # path: url path is /notes/{id}
+                path: notes
+                method: get
+                cors: true
+                authorizer: aws_iam
+    # Defined an HTTP API endpoint that calls the main function in update.js
+    update:
+        handler: update.main
+        events:
+            - http:
+                # path: url path is /notes/{id}
+                path: notes/{id}
+                method: put
+                cors: true
+                authorizer: aws_iam
+    # Defined an HTTP API endpoint that calls the main function in update.js
+    delete:
+        handler: delete.main
+        events:
+            - http:
+                # path: url path is /notes/{id}
+                path: notes/{id}
+                method: delete
+                cors: true
+                authorizer: aws_iam
+    # Defined an HTTP API endpoint that calls the main function in billing.js
+    billing:
+        handler: billing.main
+        events:
+            - http:
+                # path: url path is /notes/{id}
+                path: billing
+                method: post
+                cors: true
+                authorizer: aws_iam
