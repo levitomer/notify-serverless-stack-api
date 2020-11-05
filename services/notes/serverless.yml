@@ -14,7 +14,7 @@ plugins:
 provider:
     name: aws
     runtime: nodejs12.x
-    stage: prod
+    stage: dev
     region: us-east-1
 
     # These environment variables are made available to our functions
@@ -57,51 +57,51 @@ functions:
         handler: get.main
         events:
             - http:
-                # path: url path is /notes/{id}
-                path: notes/{id}
-                method: get
-                cors: true
-                authorizer: aws_iam
+                  # path: url path is /notes/{id}
+                  path: notes/{id}
+                  method: get
+                  cors: true
+                  authorizer: aws_iam
     # Defined an HTTP API endpoint that calls the main function in list.js
     list:
         handler: list.main
         events:
             - http:
-                # path: url path is /notes/{id}
-                path: notes
-                method: get
-                cors: true
-                authorizer: aws_iam
+                  # path: url path is /notes/{id}
+                  path: notes
+                  method: get
+                  cors: true
+                  authorizer: aws_iam
     # Defined an HTTP API endpoint that calls the main function in update.js
     update:
         handler: update.main
         events:
             - http:
-                # path: url path is /notes/{id}
-                path: notes/{id}
-                method: put
-                cors: true
-                authorizer: aws_iam
+                  # path: url path is /notes/{id}
+                  path: notes/{id}
+                  method: put
+                  cors: true
+                  authorizer: aws_iam
     # Defined an HTTP API endpoint that calls the main function in update.js
     delete:
         handler: delete.main
         events:
             - http:
-                # path: url path is /notes/{id}
-                path: notes/{id}
-                method: delete
-                cors: true
-                authorizer: aws_iam
+                  # path: url path is /notes/{id}
+                  path: notes/{id}
+                  method: delete
+                  cors: true
+                  authorizer: aws_iam
     # Defined an HTTP API endpoint that calls the main function in billing.js
     billing:
         handler: billing.main
         events:
             - http:
-                # path: url path is /notes/{id}
-                path: billing
-                method: post
-                cors: true
-                authorizer: aws_iam
+                  # path: url path is /notes/{id}
+                  path: billing
+                  method: post
+                  cors: true
+                  authorizer: aws_iam
 # Create our resources with seperate CloudFormation templates
 resources:
     # API Gateway Errors
